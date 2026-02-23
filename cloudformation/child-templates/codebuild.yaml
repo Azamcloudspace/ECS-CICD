@@ -37,15 +37,16 @@ Resources:
 
               - Effect: Allow
                 Action:
-                  - ecr:CompleteLayerUpload
+                  - ecr:BatchCheckLayerAvailability
                   - ecr:CompleteLayerUpload
                   - ecr:PutImage
                   - ecr:UploadLayerPart
-                Resource: arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-frontend-repository
+                  - ecr:InitiateLayerUpload
+                Resource: !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-frontend-repository"
 
               - Effect: Allow
                 Action:
-                  - s3:listBucket
+                  - s3:ListBucket
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
@@ -75,5 +76,6 @@ Resources:
 Outputs:
   CodeBuildProjectName:
     Value: !Ref CodeBuildProject
+
 
 
