@@ -4,6 +4,9 @@ Parameters:
   EnvironmentName:
     Type: String
 
+  VPC:
+    Type: String
+
 Resources:
 
   AlbSecurityGroup:
@@ -96,4 +99,5 @@ Outputs:
     Value: !Ref ApiSecurityGroup
 
   WorkerSecurityGroupId:
+
     Value: !Ref WorkerSecurityGroup
