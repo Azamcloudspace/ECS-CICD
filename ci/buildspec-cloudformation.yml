@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 975050225555.dkr.ecr.us-east-1.amazonaws.com
+      - FRONTEND_REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-frontend-repository
+      - FRONTEND_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - API_REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-api-repository
+      - API_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - WORKER_REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-worker-repository
+      - WORKER_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+
+
+  build:
+    commands:
+      - echo "Uploading nested stack templates to S3..."
+      - aws s3 sync cloudformation/child-templates/ s3://iac-bucket-azamcloud/
+      - aws cloudformation deploy --template-file cloudformation/master/master.yaml --stack-name Ecs-Cicd --capabilities CAPABILITY_NAMED_IAM --parameter-overrides file://cloudformation/params/dev/dev_params.json --region us-east-1
+      - docker build -f app/frontend/indexDockerfile.dockerfile -t $FRONTEND_REPOSITORY_URI:$FRONTEND_IMAGE_TAG .
+      - docker push $FRONTEND_REPOSITORY_URI:$FRONTEND_IMAGE_TAG
+      - docker build -f app/api/apiDockerfile.dockerfile -t $API_REPOSITORY_URI:$API_IMAGE_TAG .
+      - docker push $API_REPOSITORY_URI:$API_IMAGE_TAG
+      - docker build -f app/worker/workerDockerfile.dockerfile -t $WORKER_REPOSITORY_URI:$WORKER_IMAGE_TAG .
+      - docker push $WORKER_REPOSITORY_URI:$WORKER_IMAGE_TAG
+
+artifacts:
+  files:
+    - '**/*'

@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Frontend Service
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  ClusterName:
+    Type: String
+  FrontendTaskDefinitionArn:
+    Type: String
+  ApiTaskDefinitionArn:
+    Type: String
+  WorkerTaskDefinitionArn:
+    Type: String
+  PrivateSubnet1:
+    Type: String
+  PrivateSubnet2:
+    Type: String
+  FrontendSecurityGroup:
+    Type: String
+  ApiSecurityGroup:
+    Type: String
+  WorkerSecurityGroup:
+    Type: String
+  FrontendTargetGroupArn:
+    Type: String
+  ApiTargetGroupArn:
+    Type: String
+  
+Resources:
+  FrontendService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ClusterName
+      LaunchType: FARGATE
+      DesiredCount: 1
+      TaskDefinition: !Ref FrontendTaskDefinitionArn
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: 
+            - !Ref PrivateSubnet1
+            - !Ref PrivateSubnet2
+          SecurityGroup: !Ref FrontendSecurityGroup
+      LoadBalancers:
+        - ContainerName: !Sub "${EnvironmentName}-frontend"
+          ContainerPort: 80
+          TargetGroupArn: !Ref FrontendTargetGroupArn
+
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ApiService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ClusterName
+      LaunchType: FARGATE
+      DesiredCount: 1
+      TaskDefinition: !Ref ApiTaskDefinitionArn
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: 
+            - !Ref PrivateSubnet1
+            - !Ref PrivateSubnet2
+          SecurityGroup: !Ref ApiSecurityGroup
+      LoadBalancers:
+        - ContainerName: !Sub "${EnvironmentName}-api-container"
+          ContainerPort: 5000
+          TargetGroupArn: !Ref ApiTargetGroupArn
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  WorkerService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ClusterName
+      LaunchType: FARGATE
+      DesiredCount: 1
+      TaskDefinition: !Ref WorkerTaskDefinitionArn
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: 
+            - !Ref PrivateSubnet1
+            - !Ref PrivateSubnet2
+          SecurityGroup: !Ref WorkerSecurityGroup
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  FrontendServiceName:
+    Value: !Ref FrontendService
+
+  FrontendServiceArn:
+    Value: !GetAtt FrontendService.Arn
+
+  ApiServiceName:
+    Value: !Ref ApiService
+
+  ApiServiceArn:
+    Value: !GetAtt ApiService.Arn
+
+  WorkerServiceName:
+    Value: !Ref WorkerService
+
+  WorkerServiceArn:
+    Value: !GetAtt WorkerService.Arn

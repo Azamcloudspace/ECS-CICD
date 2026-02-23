@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  EnvironmentName:
+    Type: String
+
+Resources:
+  JobQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${EnvironmentName}-microservices-job-queue"
+      VisibilityTimeout: 60
+      MessageRetentionPeriod: 345600   # 4 days
+      ReceiveMessageWaitTimeSeconds: 10
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  QueueUrl:
+    Value: !Ref JobQueue
+
+  QueueArn:
+    Value: !GetAtt JobQueue.Arn

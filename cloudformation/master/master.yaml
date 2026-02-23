@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    
+  VpcCidr:
+    Type: String
+    
+  PublicSubnet1Cidr:
+    Type: String
+    
+  PublicSubnet2Cidr:
+    Type: String
+  
+  PrivateSubnet1Cidr:
+    Type: String
+  
+  PrivateSubnet2Cidr:
+    Type: String
+    
+  GitHubRepo:
+    Type: String
+    
+  GitHubOwner:
+    Type: String
+    
+  CodeStarConnectionArn:
+    Type: String  
+
+Resources:
+
+  EcrStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/ecr.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+
+  ClusterStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/cluster.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+  
+  VpcStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/vpc.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcCidr: !Ref VpcCidr
+        PublicSubnet1Cidr: !Ref PublicSubnet1Cidr
+        PublicSubnet2Cidr: !Ref PublicSubnet2Cidr
+        PrivateSubnet1Cidr: !Ref PrivateSubnet1Cidr
+        PrivateSubnet2Cidr: !Ref PrivateSubnet2Cidr
+
+  SgStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/security-group.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+
+  AlbStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/alb.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        PublicSubnet1: !GetAtt VpcStack.Outputs.PublicSubnet1
+        PublicSubnet2: !GetAtt VpcStack.Outputs.PublicSubnet2
+        VpcId: !GetAtt VpcStack.Outputs.VpcId
+        AlbSecurityGroup: !GetAtt SgStack.Outputs.AlbSecurityGroupId
+
+  SqsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/sqs.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+         
+  IamRoleStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/iam-role.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        QueueArn: !GetAtt SqsStack.Outputs.QueueArn
+
+  TaskDefinitionStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/taskdefinition.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        ExecutionRoleArn: !GetAtt IamRoleStack.Outputs.ExecutionRoleArn
+        TaskRoleArn: !GetAtt IamRoleStack.Outputs.TaskRoleArn
+        QueueUrl: !GetAtt SqsStack.Outputs.QueueUrl
+  
+  EcsServiceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/ecs-service.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
+        FrontendTaskDefinitionArn: !GetAtt TaskDefinitionStack.Outputs.FrontendTaskDefinitionArn
+        ApiTaskDefinitionArn: !GetAtt TaskDefinitionStack.Outputs.ApiTaskDefinitionArn
+        WorkerTaskDefinitionArn: !GetAtt TaskDefinitionStack.Outputs.WorkerTaskDefinitionArn
+        PrivateSubnet1: !GetAtt VpcStack.Outputs.PrivateSubnet1
+        PrivateSubnet2: !GetAtt VpcStack.Outputs.PrivateSubnet2
+        FrontendSecurityGroup: !GetAtt SgStack.Outputs.FrontendSecurityGroupId
+        ApiSecurityGroup: !GetAtt SgStack.Outputs.ApiSecurityGroupId
+        WorkerSecurityGroup: !GetAtt SgStack.Outputs.WorkerSecurityGroupId
+        FrontendTargetGroupArn: !GetAtt AlbStack.Outputs.FrontendTargetGroupArn
+        ApiTargetGroupArn: !GetAtt AlbStack.Outputs.ApiTargetGroupArn
+
+  TestBuildStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/testbuild.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+
+  CodebuildStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codebuild.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        
+  CodepipelineStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codepipeline-primary.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        GitHubRepo: !Ref GitHubRepo
+        GitHubOwner: !Ref GitHubOwner
+        CodeStarConnectionArn: !Ref CodeStarConnectionArn
+        TestBuildProject: !GetAtt TestBuildStack.Outputs.TestBuildProjectName
+        EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
+        ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
+        ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
