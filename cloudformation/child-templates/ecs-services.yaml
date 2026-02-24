@@ -28,6 +28,25 @@ Parameters:
     Type: String
   
 Resources:
+  FrontLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/ecs/${EnvironmentName}-front"
+      RetentionInDays: 14
+
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/ecs/${EnvironmentName}-api"
+      RetentionInDays: 14
+
+  WorkerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/ecs/${EnvironmentName}-worker"
+      RetentionInDays: 14
+
+
   FrontendService:
     Type: AWS::ECS::Service
     Properties:
@@ -106,4 +125,5 @@ Outputs:
 
   WorkerServiceName:
     Value: !Ref WorkerService
+
 
