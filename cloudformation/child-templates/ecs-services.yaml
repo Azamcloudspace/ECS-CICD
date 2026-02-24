@@ -41,7 +41,8 @@ Resources:
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
-          SecurityGroup: !Ref FrontendSecurityGroup
+          SecurityGroups: 
+            - !Ref FrontendSecurityGroup
       LoadBalancers:
         - ContainerName: !Sub "${EnvironmentName}-frontend"
           ContainerPort: 80
@@ -65,9 +66,10 @@ Resources:
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
-          SecurityGroup: !Ref ApiSecurityGroup
+          SecurityGroups: 
+            - !Ref ApiSecurityGroup
       LoadBalancers:
-        - ContainerName: !Sub "${EnvironmentName}-api-container"
+        - ContainerName: !Sub "${EnvironmentName}-api"
           ContainerPort: 5000
           TargetGroupArn: !Ref ApiTargetGroupArn
 
@@ -88,7 +90,8 @@ Resources:
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
-          SecurityGroup: !Ref WorkerSecurityGroup
+          SecurityGroups: 
+            - !Ref WorkerSecurityGroup
 
       Tags:
         - Key: Environment
@@ -98,17 +101,8 @@ Outputs:
   FrontendServiceName:
     Value: !Ref FrontendService
 
-  FrontendServiceArn:
-    Value: !GetAtt FrontendService.Arn
-
   ApiServiceName:
     Value: !Ref ApiService
 
-  ApiServiceArn:
-    Value: !GetAtt ApiService.Arn
-
   WorkerServiceName:
     Value: !Ref WorkerService
-
-  WorkerServiceArn:
-    Value: !GetAtt WorkerService.Arn
