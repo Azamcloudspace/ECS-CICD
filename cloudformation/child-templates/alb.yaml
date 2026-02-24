@@ -95,7 +95,7 @@ Resources:
       Protocol: HTTP
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !GetAtt FrontendTargetGroup.Arn
+          TargetGroupArn: !Ref FrontendTargetGroup
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -109,7 +109,7 @@ Resources:
               - /api/*
       Actions:
         - Type: forward
-          TargetGroupArn: !GetAtt ApiTargetGroup.Arn
+          TargetGroupArn: !Ref ApiTargetGroup
 
 
 
@@ -127,7 +127,8 @@ Outputs:
     Value: !Ref Listener
 
   FrontendTargetGroupArn:
-    Value: !GetAtt FrontendTargetGroup.Arn
+    Value: !Ref FrontendTargetGroup
 
   ApiTargetGroupArn:
-    Value: !GetAtt ApiTargetGroup.Arn
+
+    Value: !Ref ApiTargetGroup
