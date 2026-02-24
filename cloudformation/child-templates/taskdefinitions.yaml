@@ -18,10 +18,10 @@ Parameters:
 
 Resources:
 
-  FrontLogGroup:
+  FrontendLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/ecs/${EnvironmentName}-front"
+      LogGroupName: !Sub "/ecs/${EnvironmentName}-frontend"
       RetentionInDays: 14
 
   ApiLogGroup:
@@ -54,7 +54,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Ref FrontLogGroup
+              awslogs-group: !Ref FrontendLogGroup
               awslogs-region: !Sub "${AWS::Region}"
               awslogs-stream-prefix: ecs
       Tags:
@@ -130,5 +130,6 @@ Outputs:
 
   WorkerTaskDefinitionArn:
     Value: !Ref WorkerTaskDefinition
+
 
 
