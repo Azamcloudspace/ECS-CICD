@@ -37,7 +37,7 @@ Resources:
       TaskDefinition: !Ref FrontendTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          AssignPublicIp: DISABLED
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
@@ -62,7 +62,7 @@ Resources:
       TaskDefinition: !Ref ApiTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          AssignPublicIp: DISABLED
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
@@ -86,7 +86,7 @@ Resources:
       TaskDefinition: !Ref WorkerTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
+          AssignPublicIp: DISABLED
           Subnets: 
             - !Ref PrivateSubnet1
             - !Ref PrivateSubnet2
@@ -106,3 +106,4 @@ Outputs:
 
   WorkerServiceName:
     Value: !Ref WorkerService
+
