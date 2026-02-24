@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "GitHubRepo",
-    "ParameterValue": "Ecs-Cicd-Project"
+    "ParameterValue": "ECS-CICD"
   },
   {
     "ParameterKey": "GitHubOwner",
