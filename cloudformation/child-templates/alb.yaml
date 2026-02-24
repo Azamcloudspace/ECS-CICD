@@ -72,6 +72,7 @@ Resources:
       Port: 80
       Protocol: HTTP
       VpcId: !Ref VpcId
+      TargetType: ip
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
       HealthCheckPort: traffic-port
@@ -83,6 +84,7 @@ Resources:
       Port: 5000
       Protocol: HTTP
       VpcId: !Ref VpcId
+      TargetType: ip
       HealthCheckPath: /api/health
       HealthCheckProtocol: HTTP
       HealthCheckPort: traffic-port
@@ -132,3 +134,4 @@ Outputs:
   ApiTargetGroupArn:
 
     Value: !Ref ApiTargetGroup
+
