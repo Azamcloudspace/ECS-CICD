@@ -29,7 +29,7 @@ Resources:
       ExecutionRoleArn: !Ref ExecutionRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-frontend"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/frontend:latest"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-frontend-repository:latest"
           PortMappings:
             - ContainerPort: 80
             
@@ -50,7 +50,7 @@ Resources:
       TaskRoleArn: !Ref TaskRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-api"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/api:latest"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-api-repository:latest"
           PortMappings:
             - ContainerPort: 5000
           Environment:
@@ -76,7 +76,7 @@ Resources:
       TaskRoleArn: !Ref TaskRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-worker"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/worker:latest"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-worker-repository:latest"
           Environment:
             - Name: AWS_REGION
               Value: !Sub "${AWS::Region}"
@@ -95,4 +95,5 @@ Outputs:
     Value: !GetAtt ApiTaskDefinition.Arn
 
   WorkerTaskDefinitionArn:
+
     Value: !GetAtt WorkerTaskDefinition.Arn
