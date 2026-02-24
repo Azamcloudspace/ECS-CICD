@@ -32,7 +32,12 @@ Resources:
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-frontend-repository:latest"
           PortMappings:
             - ContainerPort: 80
-            
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/ecs/${EnvironmentName}/frontend"
+              awslogs-region: !Sub "${AWS::Region}"
+              awslogs-stream-prefix: ecs
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
@@ -58,7 +63,12 @@ Resources:
               Value: !Sub "${AWS::Region}"
             - Name: QUEUE_URL
               Value: !Ref QueueUrl
-
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/ecs/${EnvironmentName}/api"
+              awslogs-region: !Sub "${AWS::Region}"
+              awslogs-stream-prefix: ecs
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
@@ -82,18 +92,23 @@ Resources:
               Value: !Sub "${AWS::Region}"
             - Name: QUEUE_URL
               Value: !Ref QueueUrl
-
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub "/ecs/${EnvironmentName}/worker"
+              awslogs-region: !Sub "${AWS::Region}"
+              awslogs-stream-prefix: ecs
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
 
 Outputs:
   FrontendTaskDefinitionArn:
-    Value: !GetAtt FrontendTaskDefinition.Arn
+    Value: !Ref FrontendTaskDefinition
 
   ApiTaskDefinitionArn:
-    Value: !GetAtt ApiTaskDefinition.Arn
+    Value: !Ref ApiTaskDefinition
 
   WorkerTaskDefinitionArn:
+    Value: !Ref WorkerTaskDefinition
 
-    Value: !GetAtt WorkerTaskDefinition.Arn
