@@ -93,7 +93,7 @@ Resources:
   TaskDefinitionStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/taskdefinition.yaml
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/taskdefinitions.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         ExecutionRoleArn: !GetAtt IamRoleStack.Outputs.ExecutionRoleArn
@@ -145,5 +145,6 @@ Resources:
         EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
 
 
