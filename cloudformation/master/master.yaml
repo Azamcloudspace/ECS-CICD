@@ -103,7 +103,7 @@ Resources:
   EcsServiceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/ecs-service.yaml
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/ecs-services.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
@@ -145,6 +145,7 @@ Resources:
         EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
 
 
 
