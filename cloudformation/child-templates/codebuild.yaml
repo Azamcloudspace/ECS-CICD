@@ -66,7 +66,7 @@ Resources:
         Type: LINUX_CONTAINER
       Source:
         Type: CODEPIPELINE
-        BuildSpec: buildspec.yml
+        BuildSpec: ci/buildspec.yml
       TimeoutInMinutes: 10
       Tags:
         - Key: Environment
@@ -76,6 +76,7 @@ Resources:
 Outputs:
   CodeBuildProjectName:
     Value: !Ref CodeBuildProject
+
 
 
 
