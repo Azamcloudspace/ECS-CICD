@@ -154,9 +154,10 @@ Resources:
         GitHubOwner: !Ref GitHubOwner
         CodeStarConnectionArn: !Ref CodeStarConnectionArn
         TestBuildProject: !GetAtt TestBuildStack.Outputs.TestBuildProjectName
-        EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
+        ECSBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
 
 
 
