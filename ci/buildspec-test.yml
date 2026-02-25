@@ -11,6 +11,6 @@ phases:
       - test -s app/frontend-update/front-update.html
 
       - echo Checking for required text
-      - grep "Frontend Version" /var/www/html/front-update.html
+      - grep "Frontend Version" app/frontend-update/front-update.html
 
       - echo Frontend tests passed
