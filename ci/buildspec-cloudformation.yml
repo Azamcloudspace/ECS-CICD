@@ -15,13 +15,30 @@ phases:
       - API_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - WORKER_REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-worker-repository
       - WORKER_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - |
+        cat > cloudformation/params/dev_params.json <<EOF
+        [ 
+          { "ParameterKey": "EnvironmentName", "ParameterValue": "dev" },
+          { "ParameterKey": "VpcCidr", "ParameterValue": "10.4.0.0/16" },
+          { "ParameterKey": "PublicSubnet1Cidr", "ParameterValue": "10.4.1.0/24" },
+          { "ParameterKey": "PublicSubnet2Cidr", "ParameterValue": "10.4.2.0/24" },
+          { "ParameterKey": "PrivateSubnet1Cidr", "ParameterValue": "10.4.3.0/24" },
+          { "ParameterKey": "PrivateSubnet2Cidr", "ParameterValue": "10.4.4.0/24" },
+          { "ParameterKey": "GitHubRepo", "ParameterValue": "ECS-CICD" },
+          { "ParameterKey": "GitHubOwner", "ParameterValue": "Azamcloudspace" },
+          { "ParameterKey": "CodeStarConnectionArn", "ParameterValue": "arn:aws:codeconnections:us-east-1:975050225555:connection/b764abe8-bf03-4f0f-bfd5-d00aaa612924" },
+          { "ParameterKey": "FrontendImageTag", "ParameterValue": "$FRONTEND_IMAGE_TAG" },
+          { "ParameterKey": "ApiImageTag", "ParameterValue": "$API_IMAGE_TAG" },
+          { "ParameterKey": "WorkerImageTag", "ParameterValue": "$WORKER_IMAGE_TAG" }
+        ]
+        EOF
 
 
   build:
     commands:
       - echo "Uploading nested stack templates to S3..."
       - aws s3 sync cloudformation/child-templates/ s3://iac-bucket-azamcloud/
-      - aws cloudformation deploy --template-file cloudformation/master/master.yaml --stack-name Ecs-Cicd --capabilities CAPABILITY_NAMED_IAM --parameter-overrides file://cloudformation/params/dev_params.json FrontendImageTag=$FRONTEND_IMAGE_TAG ApiImageTag=$API_IMAGE_TAG WorkerImageTag=$WORKER_IMAGE_TAG --region us-east-1
+      - aws cloudformation deploy --template-file cloudformation/master/master.yaml --stack-name Ecs-Cicd --capabilities CAPABILITY_NAMED_IAM --parameter-overrides file://cloudformation/params/dev_params.json --region us-east-1
       - docker build -f app/frontend/indexDockerfile.dockerfile -t $FRONTEND_REPOSITORY_URI:$FRONTEND_IMAGE_TAG .
       - docker push $FRONTEND_REPOSITORY_URI:$FRONTEND_IMAGE_TAG
       - docker build -f app/api/apiDockerfile.dockerfile -t $API_REPOSITORY_URI:$API_IMAGE_TAG .
