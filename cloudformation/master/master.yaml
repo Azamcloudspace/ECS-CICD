@@ -27,15 +27,16 @@ Parameters:
     
   CodeStarConnectionArn:
     Type: String  
-
+  
   FrontendImageTag:
     Type: String
-
+  
   ApiImageTag:
     Type: String
 
   WorkerImageTag:
     Type: String 
+
 
 Resources:
 
@@ -104,6 +105,12 @@ Resources:
         FrontendImageTag: !Ref FrontendImageTag
         ApiImageTag: !Ref ApiImageTag
         WorkerImageTag: !Ref WorkerImageTag
+        FrontendRepositoryUri: !ImportValue
+          Fn::Sub: "${EnvironmentName}-FrontendRepositoryUri"
+        ApiRepositoryUri: !ImportValue
+          Fn::Sub: "${EnvironmentName}-ApiRepositoryUri"
+        WorkerRepositoryUri: !ImportValue
+          Fn::Sub: "${EnvironmentName}-WorkerRepositoryUri"
   
   EcsServiceStack:
     Type: AWS::CloudFormation::Stack
@@ -150,6 +157,7 @@ Resources:
         EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
 
 
 
