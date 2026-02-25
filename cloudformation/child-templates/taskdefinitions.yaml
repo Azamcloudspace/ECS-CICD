@@ -15,10 +15,19 @@ Parameters:
   QueueUrl:
     Type: String
 
+  FrontendRepositoryUri:
+    Type: String
+
   FrontendImageTag:
     Type: String
 
+  ApiRepositoryUri:
+    Type: String
+
   ApiImageTag:
+    Type: String
+
+  WorkerRepositoryUri:
     Type: String
 
   WorkerImageTag:
@@ -57,7 +66,7 @@ Resources:
       ExecutionRoleArn: !Ref ExecutionRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-frontend"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-frontend-repository:${FrontendImageTag}"
+          Image: !Sub "${FrontendRepositoryUri}:${FrontendImageTag}"
           PortMappings:
             - ContainerPort: 80
           LogConfiguration:
@@ -83,7 +92,7 @@ Resources:
       TaskRoleArn: !Ref TaskRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-api"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-api-repository:${ApiImageTag}"
+          Image: !Sub "${ApiRepositoryUri}:${ApiImageTag}"
           PortMappings:
             - ContainerPort: 5000
           Environment:
@@ -114,7 +123,7 @@ Resources:
       TaskRoleArn: !Ref TaskRoleArn
       ContainerDefinitions:
         - Name: !Sub "${EnvironmentName}-worker"
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${EnvironmentName}-worker-repository:${WorkerImageTag}"
+          Image: !Sub "${WorkerRepositoryUri}:${WorkerImageTag}"
           Environment:
             - Name: AWS_REGION
               Value: !Sub "${AWS::Region}"
@@ -139,6 +148,7 @@ Outputs:
 
   WorkerTaskDefinitionArn:
     Value: !Ref WorkerTaskDefinition
+
 
 
 
