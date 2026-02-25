@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: dev
+    
+Resources:
+
+  FrontendRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "${EnvironmentName}-frontend-repository"
+      
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  ApiRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "${EnvironmentName}-api-repository"
+      
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  WorkerRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "${EnvironmentName}-worker-repository"
+      
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  FrontendRepositoryUri:
+    Value: !GetAtt FrontendRepository.RepositoryUri
+    Export:
+      Name: !Sub "${EnvironmentName}-frontend-repository-uri"
+
+  ApiRepositoryUri:
+    Value: !GetAtt ApiRepository.RepositoryUri
+    Export:
+      Name: !Sub "${EnvironmentName}-api-repository-uri"
+
+  WorkerRepositoryUri:
+    Value: !GetAtt WorkerRepository.RepositoryUri
+    Export:
+      Name: !Sub "${EnvironmentName}-worker-repository-uri"
