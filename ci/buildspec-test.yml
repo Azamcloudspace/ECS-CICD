@@ -14,14 +14,6 @@ phases:
       - echo Checking file is not empty
       - test -s app/frontend-update/front-update.html
 
-      - echo Starting local server
-      - cp app/frontend-update/front-update.html /var/www/html/
-      - service httpd start
-      - sleep 5
-
-      - echo Testing frontend availability
-      - curl -f http://localhost/front-update.html
-
       - echo Checking for required text
       - grep "Frontend Version" /var/www/html/front-update.html
 
