@@ -106,11 +106,11 @@ Resources:
         ApiImageTag: !Ref ApiImageTag
         WorkerImageTag: !Ref WorkerImageTag
         FrontendRepositoryUri: !ImportValue
-          Fn::Sub: "${EnvironmentName}-FrontendRepositoryUri"
+          Fn::Sub: "${EnvironmentName}-frontend-repository-uri"
         ApiRepositoryUri: !ImportValue
-          Fn::Sub: "${EnvironmentName}-ApiRepositoryUri"
+          Fn::Sub: "${EnvironmentName}-api-repository-uri"
         WorkerRepositoryUri: !ImportValue
-          Fn::Sub: "${EnvironmentName}-WorkerRepositoryUri"
+          Fn::Sub: "${EnvironmentName}-worker-repository-uri"
   
   EcsServiceStack:
     Type: AWS::CloudFormation::Stack
@@ -157,6 +157,7 @@ Resources:
         EcsBuildProject: !GetAtt CodebuildStack.Outputs.CodeBuildProjectName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
+
 
 
 
