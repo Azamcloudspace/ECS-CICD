@@ -174,8 +174,7 @@ Outputs:
   PipelineName:
     Value: !Ref Pipeline
 
-  PipelineArn:
-    Value: !GetAtt Pipeline.Arn
+
 
 
 
