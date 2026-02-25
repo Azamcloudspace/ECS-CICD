@@ -16,7 +16,7 @@ phases:
       - WORKER_REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-worker-repository
       - WORKER_IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - |
-        cat > cloudformation/params/dev_params.json <<EOF
+        cat > dev_params.json <<EOF
         [ 
           { "ParameterKey": "EnvironmentName", "ParameterValue": "dev" },
           { "ParameterKey": "VpcCidr", "ParameterValue": "10.4.0.0/16" },
