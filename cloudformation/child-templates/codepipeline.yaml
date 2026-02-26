@@ -89,8 +89,6 @@ Resources:
                   - codebuild:StopBuild
                 Resource: "*"
 
-
-
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -116,6 +114,15 @@ Resources:
               OutputArtifacts:
                 - Name: SourceOutput
 
+        - Name: Approval
+          Actions:
+            - Name: ManualApproval
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+        
         - Name: Build
           Actions:
             - Name: DockerBuild
@@ -167,6 +174,7 @@ Resources:
 Outputs:
   PipelineName:
     Value: !Ref Pipeline
+
 
 
 
