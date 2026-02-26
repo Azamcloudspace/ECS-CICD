@@ -48,6 +48,8 @@ Resources:
             Principal:
               Service: codepipeline.amazonaws.com
             Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonECS_FullAccess
       Policies:
         - PolicyName: CodePipelinePolicy
           PolicyDocument:
@@ -67,14 +69,6 @@ Resources:
                 Action:
                   - codestar-connections:UseConnection
                 Resource: !Ref CodeStarConnectionArn
-
-              - Effect: Allow
-                Action:
-                - ecs:DescribeServices 
-                - ecs:DescribeTaskDefinition 
-                - ecs:RegisterTaskDefinition
-                - ecs:UpdateService
-                Resource: "*"
 
               - Effect: Allow
                 Action:
@@ -173,6 +167,7 @@ Resources:
 Outputs:
   PipelineName:
     Value: !Ref Pipeline
+
 
 
 
