@@ -30,6 +30,8 @@ Parameters:
   ECSBuildProject:
     Type: String
 
+  CodeBuildArn:
+    Type: String
 Resources:
 
   ArtifactStoreBucket:
@@ -87,7 +89,9 @@ Resources:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
                   - codebuild:StopBuild
-                Resource: "*"
+                Resource: 
+                  - !Ref CodeBuildArn
+                
 
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
