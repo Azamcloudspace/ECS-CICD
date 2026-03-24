@@ -68,6 +68,9 @@ Outputs:
   CodeBuildProjectName:
     Value: !Ref CodeBuildProject
 
+  CodeBuildArn:
+    Value: !GetAtt CodeBuildProject.Arn
+
 
 
 
