@@ -30,15 +30,6 @@ Resources:
                   - logs:PutLogEvents
                 Resource: "*"
 
-              - Effect: Allow
-                Action:
-                  - s3:listBucket
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:GetObjectVersion
-                Resource: "*"
-
-
   TestBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
