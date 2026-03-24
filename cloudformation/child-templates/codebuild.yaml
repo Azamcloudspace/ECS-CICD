@@ -44,15 +44,6 @@ Resources:
                   - ecr:InitiateLayerUpload
                 Resource: !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-frontend-repository"
 
-              - Effect: Allow
-                Action:
-                  - s3:ListBucket
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:GetObjectVersion
-                Resource: "*"
-
-
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
