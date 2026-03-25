@@ -29,8 +29,8 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: 
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifacts"
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifacts/*"
+                  - !Sub "arn:aws:s3:::${AWS::AccountId}-${AWS::Region}-artifacts"
+                  - !Sub "arn:aws:s3:::${AWS::AccountId}-${AWS::Region}-artifacts/*"
 
               - Effect: Allow
                 Action:
