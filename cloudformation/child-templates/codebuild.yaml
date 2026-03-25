@@ -43,8 +43,9 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                   - s3:GetObjectVersion
-                Resource: "*"
-
+                Resource: 
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts"
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts/*"
               - Effect: Allow
                 Action:
                   - ecr:BatchCheckLayerAvailability
