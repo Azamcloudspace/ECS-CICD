@@ -32,11 +32,12 @@ Resources:
 
               - Effect: Allow
                 Action:
-                  - s3:ListBucket
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:GetObjectVersion
-                Resource: "*"
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: 
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts"
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts/*"
 
   TestBuildProject:
     Type: AWS::CodeBuild::Project
