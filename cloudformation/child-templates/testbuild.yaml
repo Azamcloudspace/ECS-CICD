@@ -32,9 +32,10 @@ Resources:
 
               - Effect: Allow
                 Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
                 Resource: 
                   - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts"
                   - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts/*"
