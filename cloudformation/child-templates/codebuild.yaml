@@ -28,9 +28,7 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: 
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts"
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-${AWS::AccountId}-artifacts/*"
+                Resource: "*"
 
               - Effect: Allow
                 Action:
