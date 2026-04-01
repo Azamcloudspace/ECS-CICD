@@ -3,7 +3,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   EnvironmentName:
     Type: String
-    Default: dev
     
 Resources:
 
