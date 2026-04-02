@@ -3,9 +3,10 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 975050225555.dkr.ecr.us-east-1.amazonaws.com
-      - REPOSITORY_URI=975050225555.dkr.ecr.us-east-1.amazonaws.com/dev-frontend-repository
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/dev-frontend-repository
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
