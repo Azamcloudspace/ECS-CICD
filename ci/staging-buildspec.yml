@@ -32,7 +32,7 @@ phases:
           { "ParameterKey": "PrivateSubnet2Cidr", "ParameterValue": "10.3.4.0/24" },
           { "ParameterKey": "GitHubRepo", "ParameterValue": "ECS-CICD" },
           { "ParameterKey": "GitHubOwner", "ParameterValue": "Azamcloudspace" },
-          { "ParameterKey": "CodeStarConnectionArn", "ParameterValue": "arn:aws:codeconnections:us-east-1:975050225555:connection/b764abe8-bf03-4f0f-bfd5-d00aaa612924" },
+          { "ParameterKey": "CodeStarConnectionArn", "ParameterValue": "arn:aws:codeconnections:eu-central-1:760773573647:connection/0e242b5e-22d9-4a97-8909-78ce7101355b" },
           { "ParameterKey": "FrontendImageTag", "ParameterValue": "$FRONTEND_IMAGE_TAG" },
           { "ParameterKey": "ApiImageTag", "ParameterValue": "$API_IMAGE_TAG" },
           { "ParameterKey": "WorkerImageTag", "ParameterValue": "$WORKER_IMAGE_TAG" }
