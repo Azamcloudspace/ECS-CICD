@@ -1,26 +1,39 @@
 version: 0.2
 
+env:
+  variables:
+    ENVIRONMENT: dev
+
 phases:
   pre_build:
     commands:
+    
+      - REGION=$AWS_DEFAULT_REGION
+
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com
-      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/dev-frontend-repository
+
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+
+      - REPOSITORY_NAME=${ENVIRONMENT}-frontend-repository
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY_NAME
+
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
 
   build:
     commands:
-      - echo Build started on `date`
+      - echo "Build started on $(date)"
       - docker build -f app/frontend-update/front-updateDockerfile.dockerfile -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo Writing image definitions...
-      - printf '[{"name":"dev-frontend","imageUri":"%s"}]' "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+      - echo "Writing image definitions..."
+
+      - CONTAINER_NAME=${ENVIRONMENT}-frontend
+
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
 
 artifacts:
   files:
     - imagedefinitions.json
-
