@@ -61,7 +61,12 @@ Resources:
                 Action:
                   - cloudformation:*
                 Resource: "*"
-              
+
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: "*"
+
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
