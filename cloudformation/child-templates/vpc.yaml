@@ -20,6 +20,7 @@ Parameters:
     Type: String
    
 Resources:
+
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -47,36 +48,18 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-nateip1"
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-nateip1"
 
   NatEIP2:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-nateip2"
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-nateip2"
   
-  NatGateway1:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId: !GetAtt NatEIP1.AllocationId
-      SubnetId: !Ref PublicSubnet1
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-nat-gateway-1"
-  
-  NatGateway2:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId: !GetAtt NatEIP2.AllocationId
-      SubnetId: !Ref PublicSubnet2
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-nat-gateway-2"
-
   PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -98,8 +81,26 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${EnvironmentName}-public-subnet-2"
-  
 
+  NatGateway1:
+    Type: AWS::EC2::NatGateway
+    DependsOn: AttachIGW
+    Properties:
+      AllocationId: !GetAtt NatEIP1.AllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-nat-gateway-1"
+  
+  NatGateway2:
+    Type: AWS::EC2::NatGateway
+    DependsOn: AttachIGW
+    Properties:
+      AllocationId: !GetAtt NatEIP2.AllocationId
+      SubnetId: !Ref PublicSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-nat-gateway-2"
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -111,6 +112,7 @@ Resources:
 
   PublicRoute:
     Type: AWS::EC2::Route
+    DependsOn: AttachIGW
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
@@ -154,17 +156,17 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-private-rt-1"
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-private-rt-1"
 
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
-        Tags: 
-          - Key: Name
-            Value: !Sub "${EnvironmentName}-private-rt-2"
+      Tags:
+        - Key: Name
+          Value: !Sub "${EnvironmentName}-private-rt-2"
             
   PrivateRoute1:
     Type: AWS::EC2::Route
@@ -195,42 +197,39 @@ Resources:
   AlbSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow HTTP and HTTPS from the internet to ALB
+      GroupDescription: Allow HTTP and HTTPS from internet to ALB
       VpcId: !Ref VPC
-  
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-  
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
-  
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
-  
       Tags:
         - Key: Name
           Value: !Sub "${EnvironmentName}-alb-sg"
 
-
 Outputs:
   VpcId:
     Value: !Ref VPC
+
   PublicSubnet1:
     Value: !Ref PublicSubnet1
+
   PublicSubnet2:
     Value: !Ref PublicSubnet2
+
   PrivateSubnet1:
     Value: !Ref PrivateSubnet1
+
   PrivateSubnet2:
     Value: !Ref PrivateSubnet2
-
-
 
 
 
