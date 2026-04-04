@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "CodestarConnectionArn",
-    "ParameterValue": "arn:aws:codeconnections:us-east-1:975050225555:connection/b764abe8-bf03-4f0f-bfd5-d00aaa612924"
+    "ParameterValue": "arn:aws:codeconnections:eu-central-1:760773573647:connection/0e242b5e-22d9-4a97-8909-78ce7101355b"
   }
 ]
 
