@@ -43,14 +43,14 @@ Resources:
   ClusterStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/cluster.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/cluster.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
   
   VpcStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/vpc.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/vpc.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         VpcCidr: !Ref VpcCidr
@@ -62,7 +62,7 @@ Resources:
   SgStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/security-group.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/security-group.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         VPC: !GetAtt VpcStack.Outputs.VpcId
@@ -70,7 +70,7 @@ Resources:
   AlbStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/alb.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/alb.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         PublicSubnet1: !GetAtt VpcStack.Outputs.PublicSubnet1
@@ -81,14 +81,14 @@ Resources:
   SqsStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/sqs.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/sqs.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
          
   IamRoleStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/iam-role.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/iam-role.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         QueueArn: !GetAtt SqsStack.Outputs.QueueArn
@@ -96,7 +96,7 @@ Resources:
   TaskDefinitionStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/taskdefinitions.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/taskdefinitions.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         ExecutionRoleArn: !GetAtt IamRoleStack.Outputs.ExecutionRoleArn
@@ -115,7 +115,7 @@ Resources:
   EcsServiceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/ecs-services.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/ecs-services.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
@@ -133,21 +133,21 @@ Resources:
   TestBuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/testbuild.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/testbuild.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
 
   CodebuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codebuild.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/codebuild.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         
   CodepipelineStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codepipeline.yaml
+      TemplateURL: !Sub https://iac-bucket-azamclouds.s3.${AWS::Region}.amazonaws.com/codepipeline.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         GitHubRepo: !Ref GitHubRepo
@@ -158,8 +158,6 @@ Resources:
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
         CodeBuildArn: !GetAtt CodebuildStack.Outputs.CodeBuildArn
-
-
 
 
 
