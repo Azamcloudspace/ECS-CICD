@@ -5,7 +5,7 @@ WORKDIR /app
 COPY app/worker/worker-requirement.txt .
 RUN pip install --no-cache-dir -r worker-requirement.txt
 
-COPY app/api/app.py .
+COPY app/worker/worker.py .
 
 EXPOSE 5000
 
