@@ -51,7 +51,10 @@ Resources:
                   - ecr:PutImage
                   - ecr:UploadLayerPart
                   - ecr:InitiateLayerUpload
-                Resource: !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-frontend-repository"
+                Resource: 
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-frontend-repository"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-api-repository"
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EnvironmentName}-worker-repository"
 
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
