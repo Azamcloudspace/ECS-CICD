@@ -38,14 +38,14 @@ Resources:
           - Sid: ALBLogDeliveryWrite
             Effect: Allow
             Principal:
-              Service: elasticloadbalancing.amazonaws.com
+              AWS: arn:aws:iam::054676820928:root
             Action: s3:PutObject
             Resource: !Sub "arn:aws:s3:::${AlbLogBucket}/AWSLogs/${AWS::AccountId}/*"
          
           - Sid: ALBLogDeliveryAclCheck
             Effect: Allow
             Principal:
-              Service: elasticloadbalancing.amazonaws.com
+              AWS: arn:aws:iam::054676820928:root
             Action: s3:GetBucketAcl
             Resource: !Sub "arn:aws:s3:::${AlbLogBucket}"
 
