@@ -53,7 +53,7 @@ Resources:
         Type: LINUX_CONTAINER
       Source:
         Type: CODEPIPELINE
-        BuildSpec: !Sub "ci/${EnvironmentName}buildspec-test.yml"
+        BuildSpec: !Sub "ci/${EnvironmentName}-buildspec-test.yml"
       TimeoutInMinutes: 10
       Tags:
         - Key: Environment
