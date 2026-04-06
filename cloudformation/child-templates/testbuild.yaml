@@ -63,5 +63,5 @@ Resources:
 Outputs:
   TestBuildProjectName:
     Value: !Ref TestBuildProject
-
-
+  TestBuildArn:
+    Value: !GetAtt TestBuildProject.Arn
