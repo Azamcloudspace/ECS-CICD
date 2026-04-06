@@ -32,6 +32,10 @@ Parameters:
 
   CodeBuildArn:
     Type: String
+  
+  TestBuildArn:
+    Type: String
+    
 Resources:
 
   ArtifactStoreBucket:
@@ -91,6 +95,7 @@ Resources:
                   - codebuild:StopBuild
                 Resource: 
                   - !Ref CodeBuildArn
+                  - !Ref TestBuildArn
                 
 
   Pipeline:
