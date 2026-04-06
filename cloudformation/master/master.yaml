@@ -158,6 +158,7 @@ Resources:
         ClusterName: !GetAtt ClusterStack.Outputs.ClusterName
         ServiceName: !GetAtt EcsServiceStack.Outputs.FrontendServiceName
         CodeBuildArn: !GetAtt CodebuildStack.Outputs.CodeBuildArn
+        TestBuildArn: !GetAtt TestBuildStack.Outputs.TestBuildArn
 
 
 
