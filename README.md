@@ -216,7 +216,7 @@ Updated Web Application (prod environment)
 ---
 
 ##  Repository Structure
-
+```
 ├── app/
 │ ├── api/
 │ ├── frontend/
@@ -226,7 +226,7 @@ Updated Web Application (prod environment)
 │ ├── child-templates/
 │ ├── infrastructure-pipeline/
 │ └── master/
-
+```
 ---
 
 ##  Automation
