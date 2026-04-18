@@ -109,7 +109,7 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: ci/dev-buildspec.yml
-      TimeoutInMinutes: 10
+      TimeoutInMinutes: 20
 
   StagingBuildProject:
     Type: AWS::CodeBuild::Project
@@ -125,7 +125,7 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: ci/staging-buildspec.yml
-      TimeoutInMinutes: 10
+      TimeoutInMinutes: 20
 
   ProdBuildProject:
     Type: AWS::CodeBuild::Project
@@ -141,7 +141,7 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: ci/prod-buildspec.yml
-      TimeoutInMinutes: 10
+      TimeoutInMinutes: 20
 
   CodePipelineRole:
     Type: AWS::IAM::Role
