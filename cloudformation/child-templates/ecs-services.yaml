@@ -34,7 +34,7 @@ Resources:
     Properties:
       Cluster: !Ref ClusterName
       LaunchType: FARGATE
-      DesiredCount: 1
+      DesiredCount: 2
       TaskDefinition: !Ref FrontendTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
@@ -59,7 +59,7 @@ Resources:
     Properties:
       Cluster: !Ref ClusterName
       LaunchType: FARGATE
-      DesiredCount: 1
+      DesiredCount: 2
       TaskDefinition: !Ref ApiTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
@@ -83,7 +83,7 @@ Resources:
     Properties:
       Cluster: !Ref ClusterName
       LaunchType: FARGATE
-      DesiredCount: 1
+      DesiredCount: 2
       TaskDefinition: !Ref WorkerTaskDefinitionArn
       NetworkConfiguration:
         AwsvpcConfiguration:
