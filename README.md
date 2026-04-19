@@ -199,6 +199,7 @@ Application Pipeline (prod environment)
 
 ### Detailed Flow
 
+```
 (GitHub)
         ↓
 Infrastructure Pipeline (if infrastructure changes detected)
@@ -218,6 +219,7 @@ ECS Service Update (Rolling Deployment)
 ALB Health Checks
         ↓
 Traffic Shift to Healthy Tasks
+```
 
 ---
 
