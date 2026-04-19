@@ -228,9 +228,9 @@ Traffic Shift to Healthy Tasks
 ### Initial Provisioning 
 
 Infrastructure Pipeline  
-→ CloudFormation Deployment  
-→ Resources Created (VPC, Alb, ECS, IAM, ECR, SQS, Application Pipeline)
-→ A working Web Application routed via ALB
+- CloudFormation Deployment  
+- Resources Created
+- A working Web Application routed via ALB
 
 ![Deployment](/screenshots/Screenshot3.png)
 Cloudformation Deployment (Prod Environment)
