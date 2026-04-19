@@ -51,6 +51,63 @@ Provisioned using modular CloudFormation templates:
 
 ![Architecture](/screenshots/Architecture.jpeg)
 
+### Infrastructure Design
+
+Provisioned using modular CloudFormation templates:
+
+- Custom VPC with public and private subnets across multiple Availability Zones  
+- ECS Fargate for serverless container orchestration  
+- Application Load Balancer for intelligent traffic routing  
+- Amazon ECR for container image storage  
+- Amazon SQS for asynchronous messaging  
+
+![Architecture](/screenshots/Architecture.jpeg)
+
+---
+
+## Infrastructure as Code (IaC) – AWS CloudFormation
+
+This project uses **AWS CloudFormation** with **two separate stack setups**:
+
+- A **standalone stack** for container repositories  
+- A **nested stack** for the main infrastructure  
+
+### Stack Structure
+
+#### 1. ECR Stack (Standalone)
+- Creates and manages **ECR repositories**
+- Deployed independently
+- The Ecr is needed to be created first independently unless docker would not have a repository to push to and if it is nested with main stack , cloudformation will result in an error due to there is no image present for the Ecs service to pull from .
+
+### 2. Main Stack (Nested)
+Controlled by a **master stack**, which deploys:
+
+```
+Cluster Stack –> Vpc Stack –> Sg(security group) Stack –> Alb Stack –> Sqs Stack -> IamRole Stack ->Taskdefinition Stack -> EcsService Stack -> TestBuild Stack -> CodeBuild Stack -> CodePipeline Stack
+```
+
+### How the Stacks Connect
+
+The **ECR stack runs separately**, but its outputs are required and **Exported** the main (nested) stack.
+
+Main stacks share data using:
+
+- **Parameters** – Pass values into stacks  
+- **Outputs** – Share values from stacks 
+
+### Design Idea
+
+- ECR stack is independent and deployed first  
+- Main stack depends on ECR outputs
+  
+This is handled using **output → parameter passing**, keeping things structured and connected.
+
+### Result
+
+- Clean structure  
+- Easy to update  
+- Reusable across different environments
+- 
 ---
 
 ##  CI/CD Pipeline Architecture
@@ -98,11 +155,8 @@ Mutiple Codebuild services are used for the different environments with their in
 - Provisions main master stack's child stacks template resources 
 - Outputs are exported from ECR stack and Imported by main master stack   
 
-
 ![Pipeline](/screenshots/Screenshot1.png)
 Infrastructure Pipeline
-
----
 
 ### Application Pipelines
 
@@ -154,6 +208,28 @@ Mutiple Codebuild services are used for the different environments with their in
 
 ![Pipeline](/screenshots/Screenshot5.png)
 Application Pipeline (prod environment)
+
+### Detailed Flow
+
+(GitHub)
+        ↓
+Infrastructure Pipeline (if infrastructure changes detected)
+        ↓
+CloudFormation Deployment (ECR, VPC, ECS, ALB, Pipelines, e.t.c)
+        ↓
+Application Pipeline Triggered
+        ↓
+CodeBuild → Docker Image Build
+        ↓
+Push Image to Amazon ECR
+        ↓
+Generate imagedefinitions.json
+        ↓
+ECS Service Update (Rolling Deployment)
+        ↓
+ALB Health Checks
+        ↓
+Traffic Shift to Healthy Tasks
 
 ---
 
