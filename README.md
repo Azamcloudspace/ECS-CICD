@@ -51,18 +51,6 @@ Provisioned using modular CloudFormation templates:
 
 ![Architecture](/screenshots/Architecture.jpeg)
 
-### Infrastructure Design
-
-Provisioned using modular CloudFormation templates:
-
-- Custom VPC with public and private subnets across multiple Availability Zones  
-- ECS Fargate for serverless container orchestration  
-- Application Load Balancer for intelligent traffic routing  
-- Amazon ECR for container image storage  
-- Amazon SQS for asynchronous messaging  
-
-![Architecture](/screenshots/Architecture.jpeg)
-
 ---
 
 ## Infrastructure as Code (IaC) – AWS CloudFormation
