@@ -70,8 +70,25 @@ This project uses **AWS CloudFormation** with **two separate stack setups**:
 ### 2. Main Stack (Nested)
 Controlled by a **master stack**, which deploys:
 
+Deployment Order (Dependency-Based)
+
 ```
-Cluster Stack –> Vpc Stack –> Sg(security group) Stack –> Alb Stack –> Sqs Stack -> IamRole Stack ->Taskdefinition Stack -> EcsService Stack -> TestBuild Stack -> CodeBuild Stack -> CodePipeline Stack
+    VpcStack        SqsStack        ClusterStack      TestBuildStack      CodebuildStack
+        ↓              ↓                  |                   |              |
+     SgStack        IamRoleStack        
+        ↓              ↓                  |                   |              |
+     AlbStack     TaskDefinitionStack (imports ECR URIs)
+            \           ↓                                   
+             \ -> EcsServiceStack    <-   |                  /            /
+                           \
+                             \            ↓                /        /
+                              ->   CodepipelineStack  <-       <-
+
+                              ## Key
+
+- ↓ → dependency order  
+- Same level → deployed in parallel  
+- ImportValue → cross-stack dependency from ECR template  
 ```
 
 ### How the Stacks Connect
